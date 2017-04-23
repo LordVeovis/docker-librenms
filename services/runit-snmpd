@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+source /etc/envvars
+sed -i -e "s/RANDOMSTRINGGOESHERE/${SNMP_COMMUNITY}/" /etc/snmp/snmpd.conf
+exec snmpd -p /run/snmpd.pid

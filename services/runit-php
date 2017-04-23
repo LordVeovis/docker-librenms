@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+source /etc/envvars
+sed -i -e "s/^;?\(date.timezone\)/\1=${TIMEZONE}/" /etc/php7/php.ini
+exec /usr/sbin/php-fpm7
