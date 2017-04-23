@@ -49,4 +49,4 @@ COPY nginx-librenms.conf /etc/nginx/conf.d/
 RUN chmod 755 /usr/sbin/runit-bootstrap
 
 VOLUME ["/opt/librenms/logs", "/opt/librenms/rrd"]
-ENTRYPOINT ["/usr/sbin/runit-bootstrap"]
+CMD ["/usr/sbin/runit-bootstrap"]
