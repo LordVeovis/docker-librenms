@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+source /etc/envvars
+install -d -m 755 -o nginx -g nginx /run/nginx
+exec nginx -c /etc/nginx/nginx.conf -g "daemon off;"

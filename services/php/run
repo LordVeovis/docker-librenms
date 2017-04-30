@@ -1,0 +1,12 @@
+#!/bin/sh
+exec 2>&1
+source /etc/envvars
+install -d -o librenms -g librenms -m 755 /run/php
+
+sed -i -e "s!^;\?\(date.timezone\).*!\1 = ${TIMEZONE}!" /etc/php7/php.ini
+sed -i -e "s/^\(\$config\['db_host'\]\).*/\1 = '${MYSQL_HOST}';/" /opt/librenms/config.php
+sed -i -e "s/^\(\$config\['db_user'\]\).*/\1 = '${MYSQL_USER}';/" /opt/librenms/config.php
+sed -i -e "s/^\(\$config\['db_pass'\]\).*/\1 = '${MYSQL_PASS}';/" /opt/librenms/config.php
+sed -i -e "s/^\(\$config\['db_name'\]\).*/\1 = '${MYSQL_NAME}';/" /opt/librenms/config.php
+
+exec /usr/sbin/php-fpm7 --nodaemonize

@@ -1,4 +1,0 @@
-#!/bin/sh
-exec 2>&1
-source /etc/envvars
-exec nginx -c /etc/nginx/nginx.conf -t -q

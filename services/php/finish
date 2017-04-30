@@ -1,0 +1,4 @@
+#!/bin/sh
+
+kill `pidof php-fpm7`
+[ -f /run/php/librenms.sock ] && rm /run/php/librenms.sock

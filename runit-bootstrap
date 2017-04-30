@@ -1,3 +1,23 @@
-#!/bin/bash
+#!/bin/sh
 export > /etc/envvars
-exec runsvdir
+
+[ ! -f /etc/envvars ] && echo "/etc/envvars does not exists" && exit
+
+cp /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+echo "$TIMEZONE" >> /etc/timezone
+
+# install initial db
+tables=$(echo 'SHOW TABLES' | mysql -h mysql -u librenms -ptoto -B librenms | wc -l)
+if [ "$tables" -eq '0' ]; then
+	echo Creating initial sql schema
+	cat /opt/librenms/build.sql | mysql -h "${MYSQL_HOST}" -u "${MYSQL_USER}" -p"${MYSQL_PASS}" -B "${MYSQL_NAME}"
+
+	# it seems the order is alphabetical
+	# i'm note very sure of that certainty
+	for i in /opt/librenms/sql-schema/*.sql; do
+		echo Updating schema with $i
+		cat "$i" | mysql -h "${MYSQL_HOST}" -u "${MYSQL_USER}" -p"${MYSQL_PASS}" -B "${MYSQL_NAME}"
+	done
+fi
+
+exec runsvdir -P /etc/service
