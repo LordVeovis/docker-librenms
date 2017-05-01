@@ -1,0 +1,16 @@
+#!/bin/sh
+docker run -it \
+	-e TIMEZONE=Europe/Paris \
+	-e SNMP_COMMUNITY=kveer \
+	-e MYSQL_HOST=mysql \
+	-e MYSQL_USER=librenms \
+	-e MYSQL_PASS=toto \
+	-e MYSQL_NAME=librenms \
+	--link mysql1:mysql \
+	-v /volume1/docker/librenms/rrd:/opt/librenms/rrd \
+	-v /volume1/docker/librenms/logs:/opt/librenms/logs \
+	-v /volume1/docker/librenms/conf-php:/opt/librenms/conf.d \
+	-p 5580:80 \
+	--tmpfs /tmp \
+	--name veovis-librenms \
+	veovis/librenms

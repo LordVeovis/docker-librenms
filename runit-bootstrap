@@ -3,21 +3,41 @@ export > /etc/envvars
 
 [ ! -f /etc/envvars ] && echo "/etc/envvars does not exists" && exit
 
+# setting the timezone
 cp /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 echo "$TIMEZONE" >> /etc/timezone
 
-# install initial db
-tables=$(echo 'SHOW TABLES' | mysql -h mysql -u librenms -ptoto -B librenms | wc -l)
+# TODO: checks that we have all necessary ENV variables
+
+# initializes the database if empty
+mysql_cmd="mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} -p${MYSQL_PASS} -B"
+tables=$(echo 'SHOW TABLES' | $mysql_cmd "${MYSQL_NAME}" | wc -l)
 if [ "$tables" -eq '0' ]; then
+
+	# as of 1.26, librenms can't use MySQL with STRICT_TRANS_TABLES, which is included by default in mysql 5.7
+	# this piece of code temporary remove the STRICT_TRANS_TABLES from sql_mode during the database creation
+	sql_mode=$($mysql_cmd -e 'select @@GLOBAL.sql_mode;' | awk '{print $2}')
+	if [ "${sql_mode#*STRICT_TRANS_TABLES}" != "${sql_mode}" ]; then
+		new_sql_mode="SET SESSION sql_mode = '$(echo $sql_mode | sed -e 's/STRICT_TRANS_TABLES//' -e 's/,,/,/')';"
+	else
+		new_sql_mode=
+	fi
+
 	echo Creating initial sql schema
-	cat /opt/librenms/build.sql | mysql -h "${MYSQL_HOST}" -u "${MYSQL_USER}" -p"${MYSQL_PASS}" -B "${MYSQL_NAME}"
+	(echo $new_sql_mode; cat /opt/librenms/build.sql) | $mysql_cmd "${MYSQL_NAME}"
 
 	# it seems the order is alphabetical
 	# i'm note very sure of that certainty
 	for i in /opt/librenms/sql-schema/*.sql; do
 		echo Updating schema with $i
-		cat "$i" | mysql -h "${MYSQL_HOST}" -u "${MYSQL_USER}" -p"${MYSQL_PASS}" -B "${MYSQL_NAME}"
+		(echo $new_sql_mode; cat "$i") | $mysql_cmd "${MYSQL_NAME}"
 	done
+
+	# creating the first user
+	echo Creating the first user
+	cd /opt/librenms
+	php adduser librenms librenms 10 admin@librenms.local
+	echo Your credentials: librenms / librenms
 fi
 
 exec runsvdir -P /etc/service

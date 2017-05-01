@@ -1,0 +1,11 @@
+--- a/LibreNMS/Plugins.php
++++ b/LibreNMS/Plugins.php
+@@ -79,7 +79,7 @@
+ 
+     public static function call($hook, $params = false)
+     {
+-        if (count(self::$plugins[$hook]) != 0) {
++        if (array_key_exists($hook, self::$plugins) && count(self::$plugins[$hook]) != 0) {
+             foreach (self::$plugins[$hook] as $name) {
+                 if (!is_array($params)) {
+                     call_user_func(array($name, $hook));
