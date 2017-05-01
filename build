@@ -1,4 +1,5 @@
 #!/bin/sh
 
+VERSION=1.27
 CURRENT_DIR=$(dirname "$SCRIPT")
-docker build --rm=true --force-rm --tag veovis/librenms:latest --tag veovis/librenms:1.27 "$CURRENT_DIR"
+docker build --rm=true --force-rm --tag veovis/librenms:latest --tag veovis/librenms:${VERSION} --build-arg VERSION=${VERSION} "$CURRENT_DIR"
