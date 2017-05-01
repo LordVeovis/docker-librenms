@@ -29,7 +29,7 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 
 # Parameters
 
-## Environemnts variables
+## Environment variables
 * TIMEZONE: the timezone
 * SNMP_COMMUNITY: the default snmp community. I'm not sure this is in use
 * MYSQL_HOST: the hostname, alias name or ip of the mysql host
