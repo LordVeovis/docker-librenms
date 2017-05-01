@@ -38,6 +38,8 @@ RUN apk update --no-cache && \
 	whois \
 	nmap \
 	rrdtool \
+	python2 \
+	py-mysqldb \
 	runit \
 	dcron \
 	mysql-client \
