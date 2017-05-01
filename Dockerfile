@@ -80,7 +80,7 @@ RUN	wget -q -O - -c 'https://github.com/librenms/librenms/archive/1.26.tar.gz' |
 	cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf && \
 	cp /opt/librenms/config.php.default /opt/librenms/config.php && \
 	echo "\$config['fping'] = '/usr/sbin/fping';" >> /opt/librenms/config.php && \
-	echo "if(file_exists(realpath(__DIR__) . '/config.d/config.php') include realpath(__DIR__) . '/config.d/config.php';" >> /opt/librenms/config.php && \
+	echo "if(file_exists(realpath(__DIR__) . '/config.d/config.php')) include realpath(__DIR__) . '/config.d/config.php';" >> /opt/librenms/config.php && \
 	wget -q -O /usr/local/bin/distro https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro && \
 	chmod +x /usr/local/bin/distro && \
 	cp /opt/librenms/librenms.nonroot.cron /etc/crontabs/librenms && \

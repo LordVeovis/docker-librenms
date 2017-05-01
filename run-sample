@@ -9,7 +9,7 @@ docker run -it \
 	--link mysql1:mysql \
 	-v /volume1/docker/librenms/rrd:/opt/librenms/rrd \
 	-v /volume1/docker/librenms/logs:/opt/librenms/logs \
-	-v /volume1/docker/librenms/conf-php:/opt/librenms/conf.d \
+	-v /volume1/docker/librenms/app-conf.d:/opt/librenms/conf.d \
 	-p 5580:80 \
 	--tmpfs /tmp \
 	--name veovis-librenms \
