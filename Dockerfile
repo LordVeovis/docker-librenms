@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-ARG VERSION=1.27
+ARG VERSION=1.26
 LABEL version="${VERSION}" \
 	description="librenms container with alpine" \
 	maintainer="Veovis <veovis@kveer.fr>"
