@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-LABEL version="1.26" \
+LABEL version="1.27" \
 	description="librenms container with alpine" \
 	maintainer="Veovis <veovis@kveer.fr>"
 
@@ -60,16 +60,8 @@ RUN chmod 755 /usr/sbin/runit-bootstrap && \
 	ln -s /usr/bin/php7 /usr/bin/php && \
 	echo 'alias ll="ls -lh --color"' >> /etc/profile
 
-RUN	wget -q -O - -c 'https://github.com/librenms/librenms/archive/1.26.tar.gz' | tar -zx -f - -C /opt && \
-	mv /opt/librenms-1.26 /opt/librenms && \
-	wget -q -O /opt/librenms/sql-schema/004.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/004.sql' && \
-	wget -q -O /opt/librenms/sql-schema/057.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/057.sql' && \
-	wget -q -O /opt/librenms/sql-schema/109.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/109.sql' && \
-	wget -q -O /opt/librenms/sql-schema/169.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/169.sql' && \
-	wget -q -O /opt/librenms/sql-schema/170.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/170.sql' && \
-	wget -q -O /opt/librenms/sql-schema/178.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/178.sql' && \
-	wget -q -O /opt/librenms/sql-schema/179.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/179.sql' && \
-	wget -q -O /opt/librenms/sql-schema/181.sql 'https://raw.githubusercontent.com/librenms/librenms/master/sql-schema/181.sql' && \
+RUN	wget -q -O - -c 'https://github.com/librenms/librenms/archive/1.27.tar.gz' | tar -zx -f - -C /opt && \
+	mv /opt/librenms-1.27 /opt/librenms && \
 	sed -i -e 's/ALTER IGNORE TABLE/ALTER TABLE/' /opt/librenms/sql-schema/109.sql && \
 	sed -i -e 's/ALTER IGNORE TABLE/ALTER TABLE/' /opt/librenms/sql-schema/181.sql && \
 	adduser -D -h /opt/librenms librenms && \
@@ -88,8 +80,7 @@ RUN	wget -q -O - -c 'https://github.com/librenms/librenms/archive/1.26.tar.gz' |
 
 COPY patches /tmp/patches
 WORKDIR /opt/librenms
-RUN patch -p 1 -i /tmp/patches/001_missing_delete_index.patch && \
-	patch -p 1 -i /tmp/patches/002_missing_menu_index.patch && \
+RUN patch -p 1 -i /tmp/patches/002_missing_menu_index.patch && \
 	patch -p 1 -i /tmp/patches/003_missing_used_sensors_index.patch
 
 VOLUME ["/opt/librenms/logs", "/opt/librenms/rrd", "/opt/librenms/config.d"]
