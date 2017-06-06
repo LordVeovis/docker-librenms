@@ -43,6 +43,7 @@ RUN apk update --no-cache && \
 	mysql-client \
 	mtr && \
 	update-ca-certificates && \
+	pear channel-update pear.php.net && \
 	pear install pear/Net_IPv4 && \
 	pear install pear/Net_IPv6 && \
 	mkdir -p /opt
@@ -58,7 +59,6 @@ RUN chmod 755 /usr/sbin/runit-bootstrap && \
 	sed -i -e 's/^;pid/pid/' /etc/php7/php-fpm.conf && \
 	sed -i -e 's!^; \?include_path.*!include_path=".:/usr/share/php7"!' /etc/php7/php.ini && \
 	rm /etc/php7/php-fpm.d/www.conf && \
-	ln -s /usr/bin/php7 /usr/bin/php && \
 	echo 'alias ll="ls -lh --color"' >> /etc/profile
 
 RUN	wget -q -O - -c "https://github.com/librenms/librenms/archive/${VERSION}.tar.gz" | tar -zx -f - -C /opt && \
