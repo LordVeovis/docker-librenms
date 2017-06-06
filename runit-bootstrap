@@ -36,7 +36,7 @@ if [ "$tables" -eq '0' ]; then
 	# creating the first user
 	echo Creating the first user
 	cd /opt/librenms
-	php adduser librenms librenms 10 admin@librenms.local
+	php adduser.php librenms librenms 10 admin@librenms.local
 	echo Your credentials: librenms / librenms
 fi
 
