@@ -29,6 +29,7 @@ RUN apk update --no-cache && \
 	php7-mcrypt \
 	php7-json \
 	php7-session \
+	php7-simplexml \
 	net-snmp \
 	net-snmp-tools \
 	graphviz \
