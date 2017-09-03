@@ -36,6 +36,7 @@ services:
       MYSQL_NAME: librenms
       MYSQL_USER: librenms
       MYSQL_PASS_FILE: /run/secrets/mysql-librenms
+      MEMCACHE_HOST: memcache
     secrets:
       - mysql-librenms
     tmpfs:

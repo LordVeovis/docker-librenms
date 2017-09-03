@@ -9,12 +9,25 @@ if [ -f "$MYSQL_PASS_FILE" ]; then
 	MYSQL_PASS=$(cat "$MYSQL_PASS_FILE")
 fi
 
+librenms_base=/opt/librenms
+librenms_config="$librenms_base/config.php"
+
 # setting mysql access for librenms
 sed -i -e "s!^;\?\(date.timezone\).*!\1 = $TIMEZONE!" /etc/php7/php.ini
-sed -i -e "s/^\(\$config\['db_host'\]\).*/\1 = '$MYSQL_HOST';/" /opt/librenms/config.php
-sed -i -e "s/^\(\$config\['db_user'\]\).*/\1 = '$MYSQL_USER';/" /opt/librenms/config.php
-sed -i -e "s/^\(\$config\['db_pass'\]\).*/\1 = '$MYSQL_PASS';/" /opt/librenms/config.php
-sed -i -e "s/^\(\$config\['db_name'\]\).*/\1 = '$MYSQL_NAME';/" /opt/librenms/config.php
+sed -i -e "s/^\(\$config\['db_host'\]\).*/\1 = '$MYSQL_HOST';/" "$librenms_config"
+sed -i -e "s/^\(\$config\['db_user'\]\).*/\1 = '$MYSQL_USER';/" "$librenms_config"
+sed -i -e "s/^\(\$config\['db_pass'\]\).*/\1 = '$MYSQL_PASS';/" "$librenms_config"
+sed -i -e "s/^\(\$config\['db_name'\]\).*/\1 = '$MYSQL_NAME';/" "$librenms_config"
+
+# settings the memcache
+if [ ! -z "MEMCACHE_HOST" ]; then
+	librenms_config_memcache="$librenms_base/config.d/_memcache"
+	echo "\$config['memcached']['enable'] = true;" > "$librenms_config_memcache"
+	echo "\$config['memcached']['host'] = '$MEMCACHE_HOST';" >> "$librenms_config_memcache"
+	echo "\$config['memcached']['port'] = 11211;" >> "$librenms_config_memcache"
+else
+	[ -f "$librenms_config_memcache" ] && rm "$librenms_config_memcache"
+fi
 
 # TODO: checks that we have all necessary ENV variables
 
@@ -51,18 +64,18 @@ if [ "$tables" -eq '0' ]; then
 	fi
 
 	echo Creating initial sql schema
-	(echo $new_sql_mode; cat /opt/librenms/build.sql) | $mysql_cmd "$MYSQL_NAME"
+	(echo $new_sql_mode; cat "$librenms_base/build.sql") | $mysql_cmd "$MYSQL_NAME"
 
 	# it seems the order is alphabetical
 	# i'm note very sure of that certainty
-	for i in `ls /opt/librenms/sql-schema/*.sql | sort`; do
+	for i in `ls "$librenms_base/sql-schema/*.sql" | sort`; do
 		echo Updating schema with $i
 		(echo $new_sql_mode; cat "$i") | $mysql_cmd "$MYSQL_NAME"
 	done
 
 	# creating the first user
 	echo Creating the first user
-	cd /opt/librenms
+	cd "$librenms_base"
 	php adduser.php librenms librenms 10 admin@librenms.local
 	echo Your credentials: librenms / librenms
 fi

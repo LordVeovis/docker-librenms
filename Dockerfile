@@ -14,17 +14,18 @@ RUN apk update --no-cache && \
 	bash \
 	php7 \
 	php7-ctype \
-	php7-mysqli \
-	php7-gd \
-	php7-snmp \
-	php7-pear \
 	php7-curl \
 	php7-fpm \
-	php7-openssl \
-	php7-mcrypt \
+	php7-gd \
 	php7-json \
+	php7-mcrypt \
+	php7-memcached \
+	php7-mysqli \
+	php7-openssl \
+	php7-pear \
 	php7-session \
 	php7-simplexml \
+	php7-snmp \
 	net-snmp \
 	net-snmp-tools \
 	graphviz \
