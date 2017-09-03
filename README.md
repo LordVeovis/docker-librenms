@@ -3,9 +3,14 @@ Docker image for LibreNMS
 
 # About
 This is a docker container for LibreNMS build around Alpine Linux for compacity.
-The container runs nginx 1.12 and PHP 7.0 FPM.
 
 There is not SSL support (and so no HTTP/2 support) as I think this should be done by a reverse proxy and not by the container itself.
+
+# Technical stack
+
+* Alpine 3.6
+* nginx 1.12
+* PHP 7.1
 
 # Sample commands
 	docker run \
