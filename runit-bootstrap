@@ -20,11 +20,14 @@ sed -i -e "s/^\(\$config\['db_pass'\]\).*/\1 = '$MYSQL_PASS';/" "$librenms_confi
 sed -i -e "s/^\(\$config\['db_name'\]\).*/\1 = '$MYSQL_NAME';/" "$librenms_config"
 
 # settings the memcache
+librenms_config_memcache="$librenms_base/config.d/_memcache.php"
 if [ ! -z "MEMCACHE_HOST" ]; then
-	librenms_config_memcache="$librenms_base/config.d/_memcache"
-	echo "\$config['memcached']['enable'] = true;" > "$librenms_config_memcache"
-	echo "\$config['memcached']['host'] = '$MEMCACHE_HOST';" >> "$librenms_config_memcache"
-	echo "\$config['memcached']['port'] = 11211;" >> "$librenms_config_memcache"
+	cat > "$librenms_config_memcache" <<EOF
+<?php
+$config['memcached']['enable'] = true;
+$config['memcached']['host'] = '$MEMCACHE_HOST'
+$config['memcached']['port'] = 11211;
+EOF
 else
 	[ -f "$librenms_config_memcache" ] && rm "$librenms_config_memcache"
 fi
