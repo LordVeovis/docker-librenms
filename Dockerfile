@@ -1,7 +1,7 @@
 FROM alpine:3.6
 
 ARG VERSION=1.31
-ARG librenms_base=$librenms_base
+ARG librenms_base=/opt/librenms
 LABEL version="${VERSION}" \
 	description="librenms container with alpine" \
 	maintainer="Veovis <veovis@kveer.fr>"
