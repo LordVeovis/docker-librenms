@@ -69,7 +69,9 @@ RUN	wget -q -O - -c "https://github.com/librenms/librenms/archive/${VERSION}.tar
 	wget -q -O /usr/local/bin/distro https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro && \
 	chmod +x /usr/local/bin/distro && \
 	cp $librenms_base/librenms.nonroot.cron /etc/crontabs/librenms && \
-	sed -i -e 's/ librenms //' /etc/crontabs/librenms
+	sed -i -e 's/ librenms //' /etc/crontabs/librenms && \
+	# disable daily updates
+	sed -i 's/^#\($config\['"'"'update'"'"'\].*\)/\1/' "$librenms_base/config.php"
 
 COPY patches /tmp/patches
 WORKDIR $librenms_base
