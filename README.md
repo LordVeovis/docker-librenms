@@ -3,10 +3,9 @@ Docker image for LibreNMS
 
 # About
 This is a docker container for LibreNMS build around Alpine Linux for compacity.
-The container runs nginx 1.10 and PHP 7.0 FPM.
+The container runs nginx 1.12 and PHP 7.0 FPM.
 
 There is not SSL support (and so no HTTP/2 support) as I think this should be done by a reverse proxy and not by the container itself.
-There is no memcached support for now.
 
 # Sample commands
 	docker run \
@@ -53,7 +52,7 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 * Regarding LibreNMS 1.26 and lower, the sql_mode STRICT_TRANS_TABLES MUST NOT be enabled. This is already managed during the database population, but not in the application yet. I suggest keeping this flag disabled in case of undiscovered bug caused by this for the 1.27 version.
 
 # TODO
-- There is absolutely no check on the passed environment variables
+- There is absolutely no checks on the passed environment variables
 - Making the mountpoint /opt/librenms/conf.d a file mountpoint instead of a folder mountpoint.
 
 # Maintenance tasks
