@@ -1,0 +1,51 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:5
+    restart: always
+    networks:
+      - local
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql-root
+      MYSQL_DATABASE: librenms
+      MYSQL_USER: librenms
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql-librenms
+    secrets:
+      - mysql-root
+      - mysql-librenms
+  memcache:
+    image: memcached:alpine
+    restart: always
+    networks:
+      - local
+  librenms:
+    image: veovis/librenms
+    restart: always
+    depends_on:
+      - mysql
+      - memcache
+    networks:
+      - local
+      - bridge
+    ports:
+      - 80:80
+    environment:
+      TIMEZONE: Europe/Paris
+      SNMP_COMMUNITY: kveer
+      MYSQL_HOST: mysql
+      MYSQL_NAME: librenms
+      MYSQL_USER: librenms
+      MYSQL_PASS_FILE: /run/secrets/mysql-librenms
+    secrets:
+      - mysql-librenms
+    tmpfs:
+      - /tmp
+networks:
+  local:
+    internal: true
+  bridge:
+secrets:
+  mysql-root:
+    file: ./secret-mysql-root.txt
+  mysql-librenms:
+    file: ./secret-mysql-librenms.txt
