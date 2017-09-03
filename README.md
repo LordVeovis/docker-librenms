@@ -50,9 +50,8 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 
 ### Database configuration
 
-* Before starting this container for the very first time, make sure the mysql server is fully initialized and ready.
 * The database MUST already exists, there is currently no checks on the existence of the database. You can refer to [the librenms installation](http://docs.librenms.org/Installation/Installation-Ubuntu-1604-Nginx/#install-configure-mysql) regarding the required privileges and database specifications
-* If the container does not found any tables in the specified database, it will create the schema and apply all updates, which can takes some times. You can follow the progress on the docker log.
+* If the container find an empty database, it will create the schema and apply all updates. You can follow the progress on the docker log.
 * After the schema has been created, a default user is created. The username and password is librenms
 * Regarding LibreNMS 1.26 and lower, the sql_mode STRICT_TRANS_TABLES MUST NOT be enabled. This is already managed during the database population, but not in the application yet. I suggest keeping this flag disabled in case of undiscovered bug caused by this for the 1.27 version.
 
