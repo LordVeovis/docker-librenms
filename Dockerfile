@@ -54,7 +54,7 @@ RUN	rm /etc/nginx/conf.d/default.conf && \
 	rm /etc/php7/php-fpm.d/www.conf
 
 RUN	wget -q -O - -c "https://github.com/librenms/librenms/archive/${VERSION}.tar.gz" | tar -zx -f - -C /opt && \
-	mv $librenms_base-${VERSION} $librenms_base && \
+	mv ${librenms_base}-${VERSION} $librenms_base && \
 	sed -i -e 's/ALTER IGNORE TABLE/ALTER TABLE/' $librenms_base/sql-schema/109.sql && \
 	sed -i -e 's/ALTER IGNORE TABLE/ALTER TABLE/' $librenms_base/sql-schema/181.sql && \
 	adduser -D -h $librenms_base librenms && \
