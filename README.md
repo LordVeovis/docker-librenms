@@ -1,4 +1,4 @@
-![nginx 1.13](https://img.shields.io/badge/nginx-1.12-brightgreen.svg) ![![License: GPL v3](https://img.shields.io/github/license/LordVeovis/docker-librenms.svg)](https://www.gnu.org/licenses/gpl-3.0) [![](https://img.shields.io/docker/pulls/veovis/librenms.svg)] [![](https://img.shields.io/docker/build/veovis/librenms.svg)]
+![nginx 1.13](https://img.shields.io/badge/nginx-1.12-brightgreen.svg) [![License: GPL v3](https://img.shields.io/github/license/LordVeovis/docker-librenms.svg)](https://www.gnu.org/licenses/gpl-3.0) [![](https://img.shields.io/docker/pulls/veovis/librenms.svg)](https://hub.docker.com/r/veovis/librenms/ 'Docker Hub') [![](https://img.shields.io/docker/build/veovis/librenms.svg)](https://hub.docker.com/r/veovis/librenms/builds/ 'Docker Hub')
 
 # docker-librenms
 Docker image for LibreNMS
