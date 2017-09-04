@@ -24,9 +24,9 @@ librenms_config_memcache="$librenms_base/config.d/_memcache.php"
 if [ ! -z "MEMCACHE_HOST" ]; then
 	cat > "$librenms_config_memcache" <<EOF
 <?php
-$config['memcached']['enable'] = true;
-$config['memcached']['host'] = '$MEMCACHE_HOST'
-$config['memcached']['port'] = 11211;
+\$config['memcached']['enable'] = true;
+\$config['memcached']['host'] = '$MEMCACHE_HOST';
+\$config['memcached']['port'] = 11211;
 EOF
 else
 	[ -f "$librenms_config_memcache" ] && rm "$librenms_config_memcache"
@@ -71,7 +71,7 @@ if [ "$tables" -eq '0' ]; then
 
 	# it seems the order is alphabetical
 	# i'm note very sure of that certainty
-	for i in `ls "$librenms_base/sql-schema/*.sql" | sort`; do
+	for i in `ls "$librenms_base"/sql-schema/*.sql | sort`; do
 		echo Updating schema with $i
 		(echo $new_sql_mode; cat "$i") | $mysql_cmd "$MYSQL_NAME"
 	done
