@@ -83,4 +83,4 @@ if [ "$tables" -eq '0' ]; then
 	echo Your credentials: librenms / librenms
 fi
 
-exec runsvdir -P /etc/service
+exec $@

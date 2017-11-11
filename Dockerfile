@@ -1,13 +1,12 @@
 FROM alpine:3.6
 
-ARG VERSION=1.31
+ARG VERSION=1.33
 ARG librenms_base=/opt/librenms
 LABEL version="${VERSION}" \
 	description="librenms container with alpine" \
 	maintainer="Veovis <veovis@kveer.fr>"
 
-RUN apk update --no-cache && \
-	apk upgrade --no-cache && \
+RUN apk upgrade --no-cache && \
 	apk add --no-cache \
 	ca-certificates \
 	openssl \
@@ -71,7 +70,6 @@ RUN	wget -q -O - -c "https://github.com/librenms/librenms/archive/${VERSION}.tar
 	chmod +x /usr/local/bin/distro && \
 	cp $librenms_base/librenms.nonroot.cron /etc/crontabs/librenms && \
 	sed -i -e 's/ librenms //' /etc/crontabs/librenms && \
-	# disable daily updates
 	sed -i 's/^#\($config\['"'"'update'"'"'\].*\)/\1/' "$librenms_base/config.php"
 
 COPY patches /tmp/patches
@@ -79,15 +77,13 @@ WORKDIR $librenms_base
 RUN patch -p 1 -i /tmp/patches/002_missing_menu_index.patch && \
 	patch -p 1 -i /tmp/patches/003_missing_used_sensors_index.patch
 
-COPY services /etc/service
-COPY runit-bootstrap /usr/local/bin/docker-entrypoint
+COPY services /etc/sv
+COPY docker-entrypoint.sh /
 COPY nginx-librenms.conf /etc/nginx/conf.d/librenms.conf
 COPY php-librenms.conf /etc/php7/php-fpm.d/librenms.conf
 
-RUN chmod 755 /usr/local/bin/docker-entrypoint && \
-	chmod -R 755 /etc/service
-
-CMD ["/usr/local/bin/docker-entrypoint"]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD [ "runsvdir", "-P /etc/sv" ]
 
 EXPOSE 80
 WORKDIR /
