@@ -1,6 +1,8 @@
 #!/bin/sh
 exec 2>&1
+set -a
 source /etc/envvars
+set +a
 install -d -o librenms -g librenms -m 755 /run/php
 
 exec /usr/sbin/php-fpm7 --nodaemonize

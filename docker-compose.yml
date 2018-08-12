@@ -1,8 +1,8 @@
 version: '3.3'
 services:
   mysql:
-    image: mysql:5
-    restart: always
+    image: mariadb:10
+    restart: on-failure
     networks:
       - local
     environment:
@@ -10,33 +10,44 @@ services:
       MYSQL_DATABASE: librenms
       MYSQL_USER: librenms
       MYSQL_PASSWORD_FILE: /run/secrets/mysql-librenms
+    command: mysqld --sql-mode='' --collation_server=utf8_unicode_ci --character_set_server=utf8 --innodb_file_per_table=1 --lower_case_table_names=0
+
     secrets:
       - mysql-root
       - mysql-librenms
   memcache:
     image: memcached:alpine
-    restart: always
+    restart: on-failure
+    networks:
+      - local
+  redis:
+    image: redis:alpine
+    restart: on-failure
     networks:
       - local
   librenms:
-    image: veovis/librenms
-    restart: always
+    #image: veovis/librenms
+    build: .
+    restart: on-failure
     depends_on:
       - mysql
       - memcache
+      - redis
     networks:
       - local
       - bridge
     ports:
-      - 80:80
+      - 8010:80
     environment:
       TIMEZONE: Europe/Paris
       SNMP_COMMUNITY: kveer
-      MYSQL_HOST: mysql
-      MYSQL_NAME: librenms
-      MYSQL_USER: librenms
+      DB_HOST: mysql
+      DB_DATABASE: librenms
+      DB_USERNAME: librenms
       MYSQL_PASS_FILE: /run/secrets/mysql-librenms
       MEMCACHE_HOST: memcache
+      REDIS_HOST: redis
+      APP_KEY: base64:ibmDkmKBY8w8ATifnuV2uEcKO2x5J7jiZOkwC+7A+/0=
     secrets:
       - mysql-librenms
     tmpfs:
