@@ -4,25 +4,23 @@
 Docker image for LibreNMS
 
 # About
-This is a docker container for LibreNMS build around Alpine Linux for compacity.
-
-There is not SSL support (and so no HTTP/2 support) as I think this should be done by a reverse proxy and not by the container itself.
+This is a docker image for LibreNMS build around Alpine Linux for compacity.
 
 # Technical stack
 
-* Alpine 3.6
-* nginx 1.12
-* PHP 7.1
+* Alpine 3.8
+* nginx 1.14
+* PHP 7.2
 * dillon's cron 4.5
 
 # Sample commands
 	docker run \
 		-e TIMEZONE=Europe/Paris \
 		-e SNMP_COMMUNITY=kveer \
-		-e MYSQL_HOST=mysql \
-		-e MYSQL_USER=librenms \
-		-e MYSQL_PASS=toto \
-		-e MYSQL_NAME=librenms \
+		-e DB_HOST=mysql \
+		-e DB_USERNAME=librenms \
+		-e MYSQL_PASS_FILE=/run/secrets/mysql-librenms \
+		-e DB_DATABASE=librenms \
 		--link mysql1:mysql \
 		-v /volume1/docker/librenms/rrd:/opt/librenms/rrd \
 		-v /volume1/docker/librenms/logs:/opt/librenms/logs \
@@ -39,11 +37,10 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 ## Environment variables
 * TIMEZONE: the timezone
 * SNMP_COMMUNITY: the default snmp community. I'm not sure this parameter is used
-* MYSQL_HOST: the hostname, alias name or ip of the mysql host
-* MYSQL_USER: the mysql user name
-* MYSQL_PASS: the mysql password
+* DB_HOST: the hostname, alias name or ip of the mysql host
+* DB_USERNAME: the mysql user name
 * MYSQL_PASS_FILE: a file containing the mysql password
-* MYSQL_NAME: the mysql database name
+* DB_DATABASE: the mysql database name
 * MEMCACHE_HOST: the hostname of a memcache server. The port is hardcoded to 11211.
 
 ## Volumes
