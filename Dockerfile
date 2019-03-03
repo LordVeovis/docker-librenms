@@ -1,6 +1,6 @@
-FROM alpine:3.8
+FROM alpine:3.9
 
-ARG VERSION=1.42.01
+ARG VERSION=1.48.1
 ARG librenms_base=/opt/librenms
 LABEL version="${VERSION}" \
 	description="librenms container with alpine" \
@@ -18,6 +18,7 @@ RUN apk upgrade --no-cache && \
 	php7 \
 	php7-ctype \
 	php7-curl \
+	php7-fileinfo \
 	php7-fpm \
 	php7-gd \
 	php7-iconv \
@@ -56,7 +57,6 @@ RUN apk upgrade --no-cache && \
 
 # download librenms
 RUN set -e; \
-	mkdir /opt; \
 	git clone https://github.com/librenms/librenms.git --branch ${VERSION} --depth=1 --single-branch "$librenms_base"
 
 # post-install system
