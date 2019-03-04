@@ -80,6 +80,8 @@ RUN adduser -D -h $librenms_base librenms && \
 	adduser nginx librenms && \
 	install -m 775 -d $librenms_base/bootstrap/cache $librenms_base/cache $librenms_base/logs $librenms_base/rrd $librenms_base/storage $librenms_base/vendor && \
 	chown -R librenms:librenms $librenms_base && \
+	setfacl -d -m g::rwx $librenms_base/rrd $librenms_base/logs $librenms_base/bootstrap/cache/ $librenms_base/storage && \
+	chmod -R ug=rwX $librenms_base/rrd $librenms_base/logs $librenms_base/bootstrap/cache/ $librenms_base/storage/ && \
 	cp $librenms_base/snmpd.conf.example /etc/snmp/snmpd.conf && \
 	install -o librenms -g librenms $librenms_base/config.php.default $librenms_base/config.php && \
 	echo "\$config['fping'] = '/usr/sbin/fping';" >> $librenms_base/config.php && \
