@@ -53,7 +53,8 @@ RUN apk upgrade --no-cache && \
 	dcron \
 	mariadb-client \
 	util-linux \
-	mtr
+	mtr \
+	ttf-dejavu
 
 # download librenms
 RUN set -e; \
