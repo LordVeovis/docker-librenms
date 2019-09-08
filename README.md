@@ -10,7 +10,7 @@ This is a docker image for LibreNMS build around Alpine Linux for compacity.
 
 * Alpine 3.10
 * nginx 1.14.2
-* PHP 7.2
+* PHP 7.3
 * dillon's cron 4.5
 
 # Sample commands
