@@ -87,6 +87,12 @@ fi
 
 cd "$librenms_base"
 
+# ensure $librenms_base/storage is suitable
+install -d -o librenms -g librenms $librenms_base/framework/cache
+install -d -o librenms -g librenms $librenms_base/framework/sessions
+install -d -o librenms -g librenms $librenms_base/framework/testing
+install -d -o librenms -g librenms $librenms_base/framework/views
+
 # run the post-install scripts
 sudo -u librenms ./scripts/composer_wrapper.php install --no-dev
 

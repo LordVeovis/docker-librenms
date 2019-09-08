@@ -1,6 +1,6 @@
-FROM alpine:3.9
+FROM alpine:3.10
 
-ARG VERSION=1.50.1
+ARG VERSION=1.52
 ARG librenms_base=/opt/librenms
 LABEL version="${VERSION}" \
 	description="librenms container with alpine" \

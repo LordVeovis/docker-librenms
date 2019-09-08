@@ -8,7 +8,7 @@ This is a docker image for LibreNMS build around Alpine Linux for compacity.
 
 # Technical stack
 
-* Alpine 3.9
+* Alpine 3.10
 * nginx 1.14.2
 * PHP 7.2
 * dillon's cron 4.5
