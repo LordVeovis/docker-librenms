@@ -15,20 +15,24 @@ services:
     secrets:
       - mysql-root
       - mysql-librenms
+
   memcache:
     image: memcached:alpine
     restart: on-failure
     networks:
       - local
+
   redis:
     image: redis:alpine
     restart: on-failure
     networks:
       - local
+
   librenms:
     #image: veovis/librenms
     build: .
     restart: on-failure
+    hostname: librenms
     depends_on:
       - mysql
       - memcache
@@ -39,7 +43,7 @@ services:
     ports:
       - 8010:80
     environment:
-      TIMEZONE: Europe/Paris
+      TZ: Europe/Paris
       SNMP_COMMUNITY: kveer
       DB_HOST: mysql
       DB_DATABASE: librenms
@@ -52,10 +56,12 @@ services:
       - mysql-librenms
     tmpfs:
       - /tmp
+
 networks:
   local:
     internal: true
   bridge:
+
 secrets:
   mysql-root:
     file: ./secret-mysql-root.txt

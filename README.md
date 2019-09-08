@@ -9,13 +9,13 @@ This is a docker image for LibreNMS build around Alpine Linux for compacity.
 # Technical stack
 
 * Alpine 3.10
-* nginx 1.14.2
+* nginx 1.16.1
 * PHP 7.3
 * dillon's cron 4.5
 
 # Sample commands
 	docker run \
-		-e TIMEZONE=Europe/Paris \
+		-e TZ=Europe/Paris \
 		-e SNMP_COMMUNITY=kveer \
 		-e DB_HOST=mysql \
 		-e DB_USERNAME=librenms \
@@ -24,7 +24,7 @@ This is a docker image for LibreNMS build around Alpine Linux for compacity.
 		--link mysql1:mysql \
 		-v /volume1/docker/librenms/rrd:/opt/librenms/rrd \
 		-v /volume1/docker/librenms/logs:/opt/librenms/logs \
-		-v /volume1/docker/librenms/app-conf.d:/opt/librenms/conf.d \
+		-v /volume1/docker/librenms/config.php:/opt/librenms/conf.d/config.php \
 		-p 5580:80 \
 		--tmpfs /tmp \
 		--name veovis-librenms \
@@ -35,7 +35,7 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 # Parameters
 
 ## Environment variables
-* TIMEZONE: the timezone
+* TZ: the timezone
 * SNMP_COMMUNITY: the default snmp community. I'm not sure this parameter is used
 * DB_HOST: the hostname, alias name or ip of the mysql host
 * DB_USERNAME: the mysql user name
@@ -46,7 +46,7 @@ You can start with the [run-sample](run-sample) in the repo that I use to tests 
 ## Volumes
 * /opt/librenms/rrd: the rrd database
 * /opt/librenms/logs: the nginx and librenms logs
-* /opt/librenms/conf.d: a mountpoint to override the librenms config.php. If this mountpoint contains a config.php file, it will be appended to the default config.php allowing advanced configuration.
+* /opt/librenms/conf.d/config.php: a mountpoint to override the librenms config.php. If will be appended to the default config.php allowing advanced configuration.
 
 # Initial setup
 

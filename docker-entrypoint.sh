@@ -1,8 +1,10 @@
 #!/bin/sh
 
 # setting the timezone
-cp /usr/share/zoneinfo/$TIMEZONE /etc/localtime
-echo "$TIMEZONE" >> /etc/timezone
+[ -n $TZ ] || TZ=Europe/Paris
+cp /usr/share/zoneinfo/$TZ /etc/localtime
+echo "$TZ" >> /etc/timezone
+sed -i -e "s!^;\?\(date.timezone\).*!\1 = $TZ!" /etc/php7/php.ini
 
 # setting MYSQL_PASS from MYSQL_PASS_FILE if set
 if [ -f "$MYSQL_PASS_FILE" ]; then
@@ -13,18 +15,9 @@ librenms_base=/opt/librenms
 librenms_config="$librenms_base/config.php"
 
 # to assure compatibility
-[ ! -f "$librenms_base/.env" ] && sudo -u librenms touch "$librenms_base/.env"
+[ -f "$librenms_base/.env" ] || sudo -u librenms touch "$librenms_base/.env"
 sed -i -e '/^\(DB_|APP\)/d' -e '/^APP_/d' "$librenms_base/.env"
-env | grep -E '(DB_|APP)' >> "$librenms_base/.env"
-
-# keeping the old configuration until all code is upgraded
-sed -i -e "s/^\(\$config\['db_host'\]\).*/\1 = '$DB_HOST';/" "$librenms_config"
-sed -i -e "s/^\(\$config\['db_user'\]\).*/\1 = '$DB_USERNAME';/" "$librenms_config"
-sed -i -e "s/^\(\$config\['db_pass'\]\).*/\1 = '$DB_PASSWORD';/" "$librenms_config"
-sed -i -e "s/^\(\$config\['db_name'\]\).*/\1 = '$DB_DATABASE';/" "$librenms_config"
-
-# setting mysql access for librenms
-sed -i -e "s!^;\?\(date.timezone\).*!\1 = $TIMEZONE!" /etc/php7/php.ini
+sed -i -e "/^\$config\['db_.*/d" "$librenms_config"
 
 # settings the memcache
 librenms_config_memcache="$librenms_base/config.d/_memcache.php"
@@ -52,15 +45,15 @@ do
   sleep 5
 done
 
-# initializes the database if empty
-mysql_cmd="mysql -h $DB_HOST -u "$DB_USERNAME" "-p$DB_PASSWORD" -B"
-
 # unsetting sensitive variables
 unset MYSQL_PASS_FILE
 
 # exporting variables to be availables to services
 export > /etc/envvars
 [ ! -f /etc/envvars ] && echo "/etc/envvars does not exists" && exit
+
+# initializes the database if empty
+mysql_cmd="mysql -h $DB_HOST -u "$DB_USERNAME" "-p$DB_PASSWORD" -B"
 
 tables=$(echo 'SHOW TABLES' | $mysql_cmd --database "$DB_DATABASE" | wc -l)
 if [ "$tables" -eq '0' ]; then
